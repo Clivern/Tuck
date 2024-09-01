@@ -1,0 +1,11 @@
+.bin/
+*.test
+*.out
+.env
+.idea
+.vscode
+*.swp
+*.orig
+
+# Built by site/build.py and deployed by the Pages workflow
+docs/
