@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/logo.svg" width="120" alt="Tuck logo">
+    <img src="assets/logo.svg" width="180" alt="Tuck logo">
     <h3 align="center">Tuck</h3>
     <p align="center">A hands-on introduction to Go, one annotated example at a time.</p>
 </p>
