@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Tuck">
+  <!-- Card with its top-right corner tucked in -->
+  <path d="M24 8h56l32 32v56a16 16 0 0 1-16 16H24A16 16 0 0 1 8 96V24A16 16 0 0 1 24 8z" fill="#1C1B19"/>
+  <path d="M80 8v20a12 12 0 0 0 12 12h20z" fill="#898781"/>
+  <!-- Prompt: chevron and cursor -->
+  <path d="M32 50l18 14-18 14" fill="none" stroke="#F9F9F7" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="58" y="80" width="30" height="8" rx="4" fill="#F9F9F7"/>
+</svg>
