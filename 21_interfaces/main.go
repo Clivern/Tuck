@@ -41,6 +41,16 @@ func (c circle) perim() float64 {
 	return 2 * math.Pi * c.radius
 }
 
+// scale has a pointer receiver, so it can change the circle it is called on.
+func (c *circle) scale(k float64) {
+	c.radius *= k
+}
+
+// scaler is implemented only by types whose method set includes scale.
+type scaler interface {
+	scale(float64)
+}
+
 // A variable with an interface type can call the methods in the interface. Here's a
 // generic measure function taking advantage of this to work on any geometry.
 func measure(g geometry) {
@@ -58,7 +68,15 @@ func detectCircle(g geometry) {
 }
 
 // This line fails to compile if rect ever stops implementing geometry.
+// Value methods are in the method set of both rect and *rect.
 var _ geometry = rect{}
+
+// A pointer method is only in the method set of the pointer. *circle implements
+// scaler. A circle value does not, even though a call on a variable still works.
+var _ scaler = (*circle)(nil)
+
+// var _ scaler = circle{}
+// error: cannot use circle{} (value of struct type circle) as scaler value in variable declaration: circle does not implement scaler (method scale has pointer receiver)
 
 func main() {
 	r := rect{width: 3, height: 4}
@@ -85,4 +103,25 @@ func main() {
 	fmt.Println(anything)
 	anything = "now a string"
 	fmt.Println(anything)
+
+	// Calling a pointer method on a variable is fine: Go takes its address.
+	// That does not put the method in the value's method set, which is why
+	// circle itself is not a scaler above.
+	grown := circle{radius: 5}
+	grown.scale(2)
+	fmt.Println("scaled radius:", grown.radius)
+
+	// An interface is nil only when it holds neither a type nor a value.
+	var noShape geometry
+	fmt.Println("nil interface:", noShape, noShape == nil)
+
+	// A nil pointer stored in an interface is not a nil interface. The type is
+	// *circle, so the comparison is false, and calling a method panics.
+	var hole *circle
+	var asShape geometry = hole
+	fmt.Println("typed nil:", asShape, asShape == nil)
+	func() {
+		defer func() { fmt.Println("nil call panicked:", recover() != nil) }()
+		asShape.area()
+	}()
 }

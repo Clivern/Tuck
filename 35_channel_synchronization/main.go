@@ -41,4 +41,16 @@ func main() {
 	}()
 	<-ready
 	fmt.Println("ready")
+
+	// The receive happens after the matching send, so writes done before the
+	// send are visible after the receive. Unlocking a mutex and a later lock
+	// of that same mutex give the same guarantee.
+	observed := ""
+	sent := make(chan struct{})
+	go func() {
+		observed = "from the sender"
+		close(sent)
+	}()
+	<-sent
+	fmt.Println(observed)
 }

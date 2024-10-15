@@ -7,7 +7,10 @@
 // Run: go run ./17_pointers
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
 
 // zeroval has an int parameter, so the argument is passed by value: it gets a copy.
 func zeroval(ival int) {
@@ -57,4 +60,10 @@ func main() {
 	// The zero value of a pointer is nil, and dereferencing nil panics.
 	var q *int
 	fmt.Println("nil?", q == nil)
+
+	// unsafe.Pointer converts between pointer types. Ordinary code keeps typed
+	// pointers. unsafe describes layout, and talks to memory from outside Go.
+	fmt.Println("byte:", unsafe.Sizeof(byte(0)))
+	fmt.Println("X then Y:", unsafe.Offsetof(p.X) < unsafe.Offsetof(p.Y))
+	fmt.Println("through unsafe:", *(*int)(unsafe.Pointer(&i)))
 }

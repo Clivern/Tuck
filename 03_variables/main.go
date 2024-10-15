@@ -6,7 +6,10 @@
 // Run: go run ./03_variables
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main() {
 	// var declares one or more variables.
@@ -45,4 +48,18 @@ func main() {
 	// An unused local variable is a compile error, which keeps code tidy:
 	// unused := 3
 	// error: declared and not used: unused
+
+	// := may redeclare names already in this block when at least one name is new.
+	// count already exists, err does not, so count is reused and err is created.
+	count := 1
+	count, err := strconv.Atoi("8")
+	fmt.Println("redeclared:", count, err)
+
+	// The same spelling in a new block creates new variables and hides the outer
+	// ones. The outer err is still nil. This is the usual err := bug.
+	{
+		count, err := strconv.Atoi("no")
+		fmt.Println("inner:", count, err)
+	}
+	fmt.Println("outer err:", err)
 }

@@ -52,6 +52,17 @@ func main() {
 	l[0] = "C"
 	fmt.Println("shared:", s)
 
+	// slice[low:high:max] sets the capacity to max-low. append then allocates
+	// instead of writing into the parent past high.
+	parent := []int{1, 2, 3, 4, 5}
+	shared := parent[1:3]
+	shared = append(shared, 9)
+	fmt.Println("shared append:", parent)
+	fresh := []int{1, 2, 3, 4, 5}
+	capped := fresh[1:3:3]
+	capped = append(capped, 9)
+	fmt.Println("capped append:", capped, fresh)
+
 	// Declare and initialize in one line.
 	t := []string{"g", "h", "i"}
 	fmt.Println("dcl:", t)
@@ -77,4 +88,10 @@ func main() {
 		}
 	}
 	fmt.Println("2d: ", twoD)
+
+	// Slices, maps, and functions compare only with nil. slices.Equal, above,
+	// compares the elements. Two slices cannot be operands of ==.
+	fmt.Println("nil slice:", []int(nil) == nil)
+	// fmt.Println([]int{1} == []int{1})
+	// error: invalid operation: []int{…} == []int{…} (slice can only be compared to nil)
 }

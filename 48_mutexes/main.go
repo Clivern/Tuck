@@ -68,4 +68,31 @@ func main() {
 
 	cfg := &Config{vals: map[string]string{"env": "prod"}}
 	fmt.Println(cfg.Get("env"))
+
+	// sync.Map is a map that is safe for concurrent use without an extra mutex.
+	// A plain map plus a mutex is still the usual choice when the lock can cover
+	// a larger update.
+	var scores sync.Map
+	scores.Store("a", 1)
+	scores.Store("a", 2)
+	v, ok := scores.Load("a")
+	fmt.Println("sync map:", v, ok)
+
+	// Cond waits for a condition protected by a mutex. Wait unlocks while the
+	// goroutine sleeps and locks again before it returns.
+	var mu sync.Mutex
+	var queue []int
+	cond := sync.NewCond(&mu)
+	mu.Lock()
+	go func() {
+		mu.Lock()
+		queue = append(queue, 1)
+		cond.Signal()
+		mu.Unlock()
+	}()
+	for len(queue) == 0 {
+		cond.Wait()
+	}
+	fmt.Println("cond:", queue[0])
+	mu.Unlock()
 }

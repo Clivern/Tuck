@@ -7,6 +7,8 @@
 // Run: go run ./89_testing_and_benchmarking
 // Run: go test -count=1 -v ./89_testing_and_benchmarking
 // Run: go test -count=1 -run=XXX -bench=. -benchtime=100000x ./89_testing_and_benchmarking
+// Run: go test -count=1 -cover ./89_testing_and_benchmarking
+// Run: go test -count=1 -race -run=TestIntMinBasic ./89_testing_and_benchmarking
 package main
 
 import "fmt"

@@ -9,6 +9,7 @@
 package main
 
 import (
+	htmltemplate "html/template"
 	"os"
 	"strings"
 	"text/template"
@@ -87,4 +88,11 @@ func main() {
 		Funcs(template.FuncMap{"upper": strings.ToUpper}).
 		Parse("{{.Name | upper}} has {{len .Langs}} languages\n"))
 	t5.Execute(os.Stdout, map[string]any{"Name": "tuck", "Langs": []string{"go", "sql"}})
+
+	// text/template inserts a value as it is. html/template uses the same actions
+	// and escapes the value so the result is safe to serve as HTML.
+	raw := template.Must(template.New("raw").Parse("text: {{.}}\n"))
+	raw.Execute(os.Stdout, "<b>")
+	page := htmltemplate.Must(htmltemplate.New("page").Parse("html: {{.}}\n"))
+	page.Execute(os.Stdout, "<b>")
 }

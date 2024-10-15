@@ -43,4 +43,38 @@ func main() {
 	// We receive the values "one" and then "two" as expected. Note that the total
 	// execution time is only about 200ms, since both sleeps execute concurrently.
 	fmt.Println("took about", time.Since(start).Round(100*time.Millisecond))
+
+	// A nil channel is never ready, so this case stays disabled and default runs.
+	// Sending or receiving on a nil channel outside select blocks forever.
+	// Closing a nil channel panics.
+	var quiet chan string
+	select {
+	case msg := <-quiet:
+		fmt.Println("nil receive:", msg)
+	default:
+		fmt.Println("nil channel was not ready")
+	}
+	func() {
+		defer func() { fmt.Println("close nil panicked:", recover() != nil) }()
+		close(quiet)
+	}()
+
+	// When more than one case is ready, select chooses one at random. Over many
+	// tries both channels are chosen.
+	left := make(chan string, 1)
+	right := make(chan string, 1)
+	left <- "L"
+	right <- "R"
+	got := map[string]int{}
+	for range 64 {
+		select {
+		case v := <-left:
+			got[v]++
+			left <- "L"
+		case v := <-right:
+			got[v]++
+			right <- "R"
+		}
+	}
+	fmt.Println("chose both:", got["L"] > 0 && got["R"] > 0)
 }

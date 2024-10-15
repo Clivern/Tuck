@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"sync"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 // This is the function we'll run in every goroutine.
@@ -51,7 +53,17 @@ func main() {
 	fmt.Println(results)
 
 	// The order of workers starting up and finishing is likely to be different for
-	// each invocation. This approach has no straightforward way to propagate errors
-	// from workers. For more advanced use cases, consider the errgroup package from
-	// golang.org/x/sync.
+	// each invocation.
+
+	// errgroup runs workers and returns the first error one of them reports.
+	var g errgroup.Group
+	for i := 1; i <= 3; i++ {
+		g.Go(func() error {
+			if i == 2 {
+				return fmt.Errorf("worker %d failed", i)
+			}
+			return nil
+		})
+	}
+	fmt.Println("errgroup:", g.Wait())
 }

@@ -35,6 +35,13 @@ func (c celsius) fahrenheit() float64 {
 	return float64(c)*9/5 + 32
 }
 
+// An alias is another name for a type, not a new type, so it cannot declare
+// methods. celsius can, because it is a defined type.
+type fahrenheit = float64
+
+// func (f fahrenheit) boiling() bool { return f >= 212 }
+// error: cannot define new methods on non-local type fahrenheit
+
 func main() {
 	r := rect{width: 10, height: 5}
 
@@ -53,6 +60,11 @@ func main() {
 	fmt.Println("scaled:", r)
 
 	fmt.Println(celsius(100).fahrenheit())
+
+	// The alias is float64, so values move between the two names with no conversion.
+	var deg fahrenheit = celsius(100).fahrenheit()
+	var plain float64 = deg
+	fmt.Println("alias:", plain)
 
 	// A method value binds the receiver, so it can be passed around as a function.
 	perim := r.perim

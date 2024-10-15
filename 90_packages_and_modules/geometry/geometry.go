@@ -29,10 +29,18 @@ func round(f float64) float64 {
 	return math.Round(f*100) / 100
 }
 
-// init runs once, when the package is first imported, before main starts.
-func init() {
-	Default = Circle{Radius: 1}
-}
-
 // Default is set by init.
 var Default Circle
+
+// Steps names each init function as it runs. Inits in one package run in source
+// order, and a package finishes its inits before the package that imports it.
+var Steps []string
+
+func init() {
+	Default = Circle{Radius: 1}
+	Steps = append(Steps, "geometry")
+}
+
+func init() {
+	Steps = append(Steps, "geometry again")
+}

@@ -70,4 +70,9 @@ func main() {
 		true,
 	}
 	fmt.Println(dog)
+
+	// A struct can be compared with == when every field can. A slice field
+	// makes the whole struct incomparable.
+	// fmt.Println(struct{ xs []int }{} == struct{ xs []int }{})
+	// error: invalid operation: struct{xs []int}{} == struct{xs []int}{} (struct containing []int cannot be compared)
 }

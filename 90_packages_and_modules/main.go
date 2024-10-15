@@ -11,20 +11,25 @@
 package main
 
 // A package is imported by its full path: the module path plus the directory. The
-// geometry package lives in the geometry/ folder next to this file.
+// geometry package lives in the geometry/ folder next to this file. An alias, geo,
+// is the name used in this file. A blank import runs init and gives no name to call.
 import (
 	"fmt"
 
-	"github.com/clivern/tuck/90_packages_and_modules/geometry"
+	geo "github.com/clivern/tuck/90_packages_and_modules/geometry"
+	_ "github.com/clivern/tuck/90_packages_and_modules/notice"
 )
 
 func main() {
-	// Exported names are used through the package name.
-	c := geometry.Circle{Radius: 2}
+	// Exported names are used through the name chosen at the import, here geo.
+	c := geo.Circle{Radius: 2}
 	fmt.Println(c.Area(), c.Diameter())
 
 	// Package-level variables are initialized, and init functions run, before main.
-	fmt.Println(geometry.Default)
+	// Steps lists them: geometry's own inits, in source order, then the package
+	// that was blank-imported.
+	fmt.Println(geo.Default)
+	fmt.Println("init:", geo.Steps)
 
 	// Lower-case names are private to their package.
 	// geometry.round(1.234)

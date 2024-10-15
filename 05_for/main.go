@@ -49,4 +49,17 @@ outer:
 			fmt.Println(i, j)
 		}
 	}
+
+	// goto jumps to a label in the same function. A labeled break is usually
+	// clearer. goto cannot skip the declaration of a variable.
+	n := 0
+jump:
+	if n == 2 {
+		goto finished
+	}
+	fmt.Println("goto", n)
+	n++
+	goto jump
+finished:
+	fmt.Println("finished")
 }

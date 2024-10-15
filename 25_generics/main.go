@@ -54,6 +54,18 @@ func Max[T cmp.Ordered](a, b T) T {
 	return b
 }
 
+// A constraint can require methods. fmt.Stringer is any type with String.
+func Quote[T fmt.Stringer](v T) string {
+	return fmt.Sprintf("%q", v.String())
+}
+
+type label string
+
+func (l label) String() string { return string(l) }
+
+// Zero has no argument the compiler can infer from, so the caller names T.
+func Zero[T any]() (z T) { return }
+
 // As an example of a generic type, List is a singly-linked list with values of any
 // type.
 type List[T any] struct {
@@ -99,6 +111,10 @@ func main() {
 
 	fmt.Println(Map([]int{1, 2, 3}, func(n int) string { return fmt.Sprint(n * n) }))
 	fmt.Println(Sum(1, 2, 3), Sum(1.5, 2.5), Max("apple", "pear"))
+	fmt.Println("quoted:", Quote(label("go")))
+	fmt.Println("zero:", Zero[int]())
+	// fmt.Println(Zero())
+	// error: in call to Zero, cannot infer T
 
 	lst := List[int]{}
 	lst.Push(10)
